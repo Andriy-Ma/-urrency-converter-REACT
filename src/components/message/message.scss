@@ -1,0 +1,32 @@
+.error {
+    position: relative;
+    min-height: 80vh;
+    padding: 50px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+&-span{
+    position: absolute;
+    top:30%;
+    transform: translateY(-50%);
+    left: 45%;
+    transform: translateX(-43%);
+    width: 600px;
+    height: 300px;
+    background-color: beige;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    span{
+        display: block;
+        color:brown;
+        font-size: 2rem;
+        padding: 30px;
+        border: 1px solid brown;
+    }
+   
+}
+}
