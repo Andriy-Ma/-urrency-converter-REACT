@@ -26,7 +26,6 @@ const ChooseCurrency = (props) => {
         localStorage.setItem('currency', item);
         onChangeCurrency(item);
         setToggle({toggle: !tog});
-        console.log(toggle)
     }
     if(toggle){
     return(

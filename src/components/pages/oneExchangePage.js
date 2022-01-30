@@ -7,12 +7,11 @@ import Error from '../message';
 
 import './oneExchangePage.scss';
 
-const BASE_URL = 'https://v6.exchangerate-api.com/v6/68550d100fd4323af51f3b06/latest';
+const BASE_URL = 'https://v6.exchangerate-api.com/v6/d0978667068dde0fbd88efe3/latest';
 
 const OneExchangePage = (props) => {
-    const {error , tog} = props;
+    const {error , tog , defCurr, firstCurrency,currencyOpt} = props;
     const [toggle, setToggle]= useState({toggle: tog});
-    const [currencyOptions, setCurrencyOptions] = useState([]);
     const [fromCurrency, setFromCurrency] = useState();
     const [toCurrency, setToCurrency] = useState();
     const [exchangeRate, setExchangeRate] = useState('');
@@ -31,13 +30,11 @@ const OneExchangePage = (props) => {
     }
   
     useEffect(() => {
-      fetch(`${BASE_URL}/USD`)
+      fetch(`${BASE_URL}/${defCurr}`)
         .then(res => res.json())
         .then(data => {
-          const firstCurrency = Object.keys(data.conversion_rates)[144];
-          setCurrencyOptions( [...Object.keys(data.conversion_rates)]);
-          setFromCurrency(currency);
-          setToCurrency(firstCurrency);
+          setFromCurrency(currency || firstCurrency);
+          setToCurrency('UAH');
           setExchangeRate(data.conversion_rates[firstCurrency]);
         })
         .catch(error => props.catchError(error))
@@ -65,67 +62,56 @@ const OneExchangePage = (props) => {
 
     function changeChoise(item) {
        localStorage.removeItem('currency');
-       setFromCurrency(item);
+       setFromCurrency("USD" );
+       setToCurrency("UAH");
        setToggle({toggle: !toggle});
     }
 
-    if(error){
-      return <Error/>
-    }
+    function yourChouse() {
+      return(
+          <>
+            <p>You chose the "{currency}"</p>
+            <button onClick={()=> changeChoise()}>Change currency</button>
+          </>
+      )
+    
+  }
 
-    if(localStorage.getItem('currency') && toggle){
-        return (
-            <div className="firstPage">
-                <p>You chose the "{currency}"</p>
-                <button onClick={()=> changeChoise()}>Change currency</button>
-            <div className="firstPage__inputs">
-                <CurrencyRow
-                    currencyOptions={currencyOptions}
-                    selectedCurrency={fromCurrency}
-                    onChangeCurrency={e => setFromCurrency(e.target.value)}
-                    onChangeAmount={handleFromAmountChange}
-                    amount={fromAmount}
-                />
-                <span><i className="fas fa-exchange-alt"></i></span>
-                <CurrencyRow
-                    currencyOptions={currencyOptions}
-                    selectedCurrency={toCurrency}
-                    onChangeCurrency={e => setToCurrency(e.target.value)}
-                    onChangeAmount={handleToAmountChange}
-                    amount={toAmount}
-                />
-            </div>
-       </div>
-        )
-    } 
-    return (
-        <div className="firstPage">
-            <ChooseCurrency onChangeCurrency={(item) => setFromCurrency(item)}/>
-            <div className="firstPage__inputs">
-            <CurrencyRow
-                currencyOptions={currencyOptions}
-                selectedCurrency={fromCurrency}
-                onChangeCurrency={e => setFromCurrency(e.target.value)}
-                onChangeAmount={handleFromAmountChange}
-                amount={fromAmount}
-            />
-                <span><i className="fas fa-exchange-alt"></i></span>
-                <CurrencyRow
-                    currencyOptions={currencyOptions}
-                    selectedCurrency={toCurrency}
-                    onChangeCurrency={e => setToCurrency(e.target.value)}
-                    onChangeAmount={handleToAmountChange}
-                    amount={toAmount}
-                />
-            </div>
-       </div>
-    );
+  if(error){
+    return <Error/>
+  }
+
+      return (
+          <div className="firstPage">
+            {localStorage.getItem('currency') && toggle ? yourChouse() :  <ChooseCurrency onChangeCurrency={(item) => setFromCurrency(item)}/>}
+          <div className="firstPage__inputs">
+              <CurrencyRow
+                  currencyOptions={currencyOpt}
+                  selectedCurrency={fromCurrency}
+                  onChangeCurrency={e => setFromCurrency(e.target.value)}
+                  onChangeAmount={handleFromAmountChange}
+                  amount={fromAmount}
+              />
+              <span><i className="fas fa-exchange-alt"></i></span>
+              <CurrencyRow
+                  currencyOptions={currencyOpt}
+                  selectedCurrency={toCurrency}
+                  onChangeCurrency={e => setToCurrency(e.target.value)}
+                  onChangeAmount={handleToAmountChange}
+                  amount={toAmount}
+              />
+          </div>
+     </div>
+      )
     
 };
 const mapStateToProps = (state)=>{
   return{
       error: state.error,
-      tog: state.tog
+      tog: state.tog,
+      defCurr: state.defCurr,
+      firstCurrency: state.firstCurrency,
+      currencyOpt: state.currencyOpt
   }
 }
 

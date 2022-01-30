@@ -1,6 +1,6 @@
 export default class GotService{
     constructor(){
-      this._apiBase = 'http://api.exchangeratesapi.io/v1/latest?access_key=e42b57017ff4d788677ba1088454efd0&symbols=USD,AUD,CAD,PLN,MXN,UAH';
+      this._apiBase = 'http://api.exchangeratesapi.io/v1/latest?access_key=e42b57017ff4d788677ba1088454efd0&symbols=RUB,AUD,CAD,PLN,MXN,UAH';
     }
      getResource = async () => {
       const res = await fetch(`${this._apiBase}`);

@@ -3,7 +3,7 @@ import React from "react";
 export default function CurrencyRow(props) {
     const {
         currencyOptions,
-        selectedCurrency ,
+        selectedCurrency = '' ,
         onChangeCurrency,
         onChangeAmount,
         amount
